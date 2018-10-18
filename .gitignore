@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+cmake-build-debug
+.pioenvs
+.piolibdeps
+.clang_complete
+.gcc-flags.json
+CMakeListsPrivate.txt

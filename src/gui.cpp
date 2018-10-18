@@ -1,25 +1,18 @@
 #include "gui.h"
 
-
-
 // Use hardware SPI ( D5= clk | D6= MISO | D7= MOSI
 Gui::Gui() : tft(TFT_CS, TFT_DC), ts(CS_PIN) {
-
-
 
 }
 
 
-
-
-
 /*!
-* Wird einmalig ausgeführt beim Start
-*Initialisiert Display, Touch und Variablen
-*fährt Testszenen beim starten ab
-* @param ---
-* @return ---
-!*/
+ * Wird einmalig ausgeführt beim Start
+ * Initialisiert Display, Touch und Variablen
+ * fährt Testszenen beim starten ab
+ * @param ---
+ * @return ---
+   !*/
 void Gui::setup(){
 //kalibrierung, touch.begin,
 // testbild
@@ -29,8 +22,6 @@ void Gui::setup(){
 
         ts.begin();
         ts.setRotation(1);
-
-
 
 // read diagnostics (optional but can help debug problems)
         uint8_t x = tft.readcommand8(ILI9341_RDMODE);
@@ -65,39 +56,41 @@ void Gui::setup(){
 }
 
 
-
 /*!
-* Updatefunktion, wird jeden Loop aufgeführt
-*Zeichnet Szenen und wertet Touch aus
-* @param ---
-* @return ---
-!*/
+ * Updatefunktion, wird jeden Loop aufgeführt
+ * Zeichnet Szenen und wertet Touch aus
+ * @param ---
+ * @return ---
+   !*/
 void Gui::update() {
-  //pumpState = pumpe.status(); // Status der Pumpe abfragen
+        //pumpState = pumpe.status(); // Status der Pumpe abfragen
         /* Abfrage Touch position vom finger */
         if (ts.touched()) {
-          lastPos = readTouch()  ;
-          presssed = true;
-         }
+                lastPos = readTouch();
+                presssed = true;
+        }
 //Wenn losgelassen
-  if (!ts.touched() && presssed) {
-      presssed = false;
+        if (!ts.touched() && presssed) {
+                presssed = false;
 
-      if(mode == home) {
-          analyzeTouchHome(lastPos);
-          } else if (mode == settings) {
-            analyzeTouchSettings(lastPos);
-          } else {
-          // ERROR
-          }
-  }
-
-
-  if(millis()%1000 == 0) homeChangedTime=true; // test
+                if(mode == home) {
+                        analyzeTouchHome(lastPos);
+                } else if (mode == settings) {
+                        analyzeTouchSettings(lastPos);
+                } else {
+                        // ERROR
+                }
+        }
 
 
-  if (mode == home && (homeChangedPump==true || homeChangedAll == true|| homeChangedLight==true || homeChangedTime==true) ) drawHome();
+        if(millis()%1000 == 0) homeChangedTime=true; // test
+
+
+        if (mode == home && (homeChangedPump==true || homeChangedAll == true|| homeChangedLight==true || homeChangedTime==true) ) drawHome();
 }
+
+//*TEST_FNC
+//*
 // füllt Display mit Farben zum Test, beim Starten
 unsigned long Gui::testFillScreen() {
         unsigned long start = micros();
@@ -114,7 +107,8 @@ unsigned long Gui::testFillScreen() {
         return micros() - start;
 }
 
-
+//*TEST_FNC
+//*
 // Zeichnet Testbild beim Starten
 unsigned long Gui::testText() {
         tft.fillScreen(ILI9341_BLACK);
@@ -146,156 +140,138 @@ unsigned long Gui::testText() {
 }
 
 
-
 /*!
-* Zeichnet Home interface
-*  |-----------------|      /\
-*  | <--2. Wert-->   |      |
-*  |    0..320       |  1. Wert  0..240
-*  |                 |      |
-*  |-----------------|     \/
-*
-*
-* @param ---
-* @return ---
-!*/
+ * Zeichnet Home interface
+ *  |-----------------|      /\
+ *  | <--2. Wert-->   |      |
+ *  |    0..320       |  1. Wert  0..240
+ *  |                 |      |
+ *  |-----------------|     \/
+ *
+ *
+ * @param ---
+ * @return ---
+   !*/
 void Gui::drawHome(){
 
-if(homeChangedAll){
-    tft.fillScreen(ILI9341_BLACK);
+        if(homeChangedAll) {
+                tft.fillScreen(ILI9341_BLACK);
         }
 
+        if(homeChangedPump || homeChangedAll) {
+                if (pumpState) {
+                        tft.fillRect(0,0,120,120,ILI9341_GREEN);
+                        tft.setCursor(10, 10);
+                        tft.setTextSize(3);
+                        tft.setTextColor(ILI9341_BLACK);
+                        tft.println("Pumpe \n \n  AN");
+                }
+                else{
+                        tft.fillRect(0,0,120,120,ILI9341_RED);
+                        tft.setCursor(10, 10);
+                        tft.setTextSize(3);
+                        tft.setTextColor(ILI9341_BLACK);
+                        tft.println("Pumpe \n \n  AUS");
+                }
+        }
 
-if(homeChangedPump || homeChangedAll){
-if (pumpState){
-    tft.fillRect(0,0,120,120,ILI9341_GREEN);
-    tft.setCursor(10, 10);
-    tft.setTextSize(3);
-    tft.setTextColor(ILI9341_BLACK);
-    tft.println("Pumpe \n \n  AN");
-    }
-else{
-tft.fillRect(0,0,120,120,ILI9341_RED);
-tft.setCursor(10, 10);
-tft.setTextSize(3);
-tft.setTextColor(ILI9341_BLACK);
-tft.println("Pumpe \n \n  AUS");
+        if(homeChangedLight || homeChangedAll) {
+                if (lightState) {
+                        tft.fillRect(120,0,200,120,ILI9341_CYAN);
+                        tft.setCursor(130, 10);
+                        tft.setTextSize(3);
+                        tft.setTextColor(ILI9341_BLACK);
+                        tft.println("Licht AN");
+                }
+                else{
+                        tft.fillRect(120,0,200,120,ILI9341_LIGHTGREY);
+                        tft.setCursor(130, 10);
+                        tft.setTextSize(3);
+                        tft.setTextColor(ILI9341_BLACK);
+                        tft.println("LICHT AUS");
+                }
+        }
+
+        if (homeChangedTime|| homeChangedAll) {
+                tft.fillRect(0,190,100,50,ILI9341_DARKGREY);
+                tft.setCursor(10, 200);
+                tft.setTextSize(3);
+                tft.setTextColor(ILI9341_YELLOW);
+                tft.println(millis()/1000);
+        }
+
+        homeChangedTime= false;
+        homeChangedLight = false;
+        homeChangedPump=false;
+        homeChangedAll=false;
 }
-}
-
-
-if(homeChangedLight || homeChangedAll){
-if (lightState){
-    tft.fillRect(120,0,200,120,ILI9341_CYAN);
-    tft.setCursor(130, 10);
-    tft.setTextSize(3);
-    tft.setTextColor(ILI9341_BLACK);
-    tft.println("Licht AN");
-    }
-else{
-  tft.fillRect(120,0,200,120,ILI9341_LIGHTGREY);
-  tft.setCursor(130, 10);
-  tft.setTextSize(3);
-  tft.setTextColor(ILI9341_BLACK);
-  tft.println("LICHT AUS");
-}
-}
-
-
-
-if (homeChangedTime|| homeChangedAll){
-tft.fillRect(0,190,100,50,ILI9341_DARKGREY);
-tft.setCursor(10, 200);
-tft.setTextSize(3);
-tft.setTextColor(ILI9341_YELLOW);
-tft.println(millis()/1000);
-}
-
-
-
-
-
-
-
-homeChangedTime= false;
-homeChangedLight = false;
-homeChangedPump=false;
-homeChangedAll=false;
-}
-
-
 
 
 
 /*!
-* Zeichnet Settings interface
-*
-* @param ---
-* @return ---
-!*/
+ * Zeichnet Settings interface
+ *
+ * @param ---
+ * @return ---
+   !*/
 void Gui::drawSettings(){
 
 
-
 }
 
 
 /*!
-* Holt die x und y kordinate vom touch
-* wird nur ausgefürt wenn ts.touched
-* @param ---
-* @return Punkt mit x und y kooridinate
-!*/
+ * Holt die x und y kordinate vom touch
+ * wird nur ausgefürt wenn ts.touched
+ * @param ---
+ * @return Punkt mit x und y kooridinate
+   !*/
 Point Gui::readTouch(){
 
+        TS_Point p = ts.getPoint();
+        Point out;
 
-  TS_Point p = ts.getPoint();
-  Point out;
+        out.x = ((p.x -450)/343*32);
+        out.y = ((p.y-230)/379*26);
 
-  out.x = ((p.x -450)/343*32);
-  out.y = ((p.y-230)/379*26);
+        return out;
+}
 
-  return out;
-  }
+/*!
+ * Zeichnet Settings interface
+ *
+ * @param ---
+ * @return ---
+   !*/
+void Gui::analyzeTouchHome(Point p){
+        int x = p.x;
+        int y = p.y;
 
-  /*!
-  * Zeichnet Settings interface
-  *
-  * @param ---
-  * @return ---
-  !*/
-  void Gui::analyzeTouchHome(Point p){
-    int x = p.x;
-    int y = p.y;
+        Serial.print(" Touch x="); Serial.println(x);
+        Serial.print(" Touch y="); Serial.println(y);
+        Serial.print(" Pumpe: "); Serial.println(pumpState);
+        Serial.print(" \n \n");
 
-    Serial.print(" Touch x="); Serial.println(x);
-    Serial.print(" Touch y="); Serial.println(y);
-    Serial.print(" Pumpe: "); Serial.println(pumpState);
-    Serial.print(" \n \n");
-
-    if (x<=120 && x>= 0 && y<=120 && y>=0){   // Pumpe Status ändern
-        if (pumpState) {
-          pumpState= false;
-          homeChangedPump= true;
-          }
-        else {pumpState= true;
-          homeChangedPump=true;
-          }
+        if (x<=120 && x>= 0 && y<=120 && y>=0) { // Pumpe Status ändern
+                if (pumpState) {
+                        pumpState= false;
+                        homeChangedPump= true;
+                }
+                else {pumpState= true;
+                      homeChangedPump=true;}
         }
 
-        if (x<=320 && x>= 120 && y<=120 && y>=0){   // LICHT Status ändern
-            if (lightState) {
-              lightState= false;
-              homeChangedLight= true;
-              }
-            else {lightState= true;
-              homeChangedLight=true;
-              }
-            }
+        if (x<=320 && x>= 120 && y<=120 && y>=0) {   // LICHT Status ändern
+                if (lightState) {
+                        lightState= false;
+                        homeChangedLight= true;
+                }
+                else {lightState= true;
+                      homeChangedLight=true;}
+        }
+
+}
 
 
-
-  }
-
-
- void Gui::analyzeTouchSettings(Point) {}
+void Gui::analyzeTouchSettings(Point) {
+}
