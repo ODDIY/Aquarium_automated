@@ -66,6 +66,16 @@ int fadefn(float start, float end, float val, float offStart,float offEnd, float
 class Fader
 {
 public:
+
+    Fader() {
+        this->start =0;
+        this->end = 0;
+        this->val = 0;
+        this->offStart = 0;
+        this->offEnd = 0;
+        this->offVal = 0;
+    }
+
     Fader(float start, float end, float val, float offStart,float offEnd, float offVal) {
         this->start =start;
         this->end = end;
