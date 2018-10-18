@@ -123,23 +123,23 @@ void Config::save() {
  * Schreibt Standart werte in den EEPROM
  */
 void Config::initSettings() {
-    this.setFader_fadeinout(FAD_R_rise, 0, 24000, 4095, 45000, 66000, 1024);
-    this.setFader_fadeinout(FAD_B_rise, 6000, 34500, 4095, 45000, 66000, 1024);
+    setFader_fadeinout(FAD_R_rise, 0, 24000, 4095, 45000, 66000, 1024);
+    setFader_fadeinout(FAD_B_rise, 6000, 34500, 4095, 45000, 66000, 1024);
 
-    this.setFader_fadeinout(FAD_R_set, 0, 24000, 4095, 45000, 66000, 1024);
-    this.setFader_fadeinout(FAD_B_set, 6000, 34500, 1024, 45000, 66000, 1024);
+    setFader_fadeinout(FAD_R_set, 0, 24000, 4095, 45000, 66000, 1024);
+    setFader_fadeinout(FAD_B_set, 6000, 34500, 1024, 45000, 66000, 1024);
 
-    this.setFader_fadein(FAD_WW_rise, 12000, 36000, 4095);
-    this.setFader_fadein(FAD_KW_rise, 30000, 60000, 4095);
+    setFader_fadein(FAD_WW_rise, 12000, 36000, 4095);
+    setFader_fadein(FAD_KW_rise, 30000, 60000, 4095);
 
-    this.setFader_fadein(FAD_WW_set, 0, 36000, 4095);
-    this.setFader_fadein(FAD_KW_set, 30000, 60000, 4095);
+    setFader_fadein(FAD_WW_set, 0, 36000, 4095);
+    setFader_fadein(FAD_KW_set, 30000, 60000, 4095);
 
-    this.setFader_fadeinout(FAD_RGB_R_rise, 0, 24000, 4095, 45000, 66000, 1024);
-    this.setFader_fadeinout(FAD_RGB_G_rise, 24000, 42000, 4095, 45000, 66000, 1024);
-    this.setFader_fadeinout(FAD_RGB_B_rise, 6000, 34500, 4095, 45000, 66000, 1024);
+    setFader_fadeinout(FAD_RGB_R_rise, 0, 24000, 4095, 45000, 66000, 1024);
+    setFader_fadeinout(FAD_RGB_G_rise, 24000, 42000, 4095, 45000, 66000, 1024);
+    setFader_fadeinout(FAD_RGB_B_rise, 6000, 34500, 4095, 45000, 66000, 1024);
 
-    this.setFader_fadeinout(FAD_RGB_R_set, 0, 24000, 4095, 45000, 66000, 1024);
-    this.setFader_fadeinout(FAD_RGB_G_set, 24000, 42000, 1024, 45000, 66000, 1024);
-    this.setFader_fadeinout(FAD_RGB_B_set, 6000, 34500, 1024, 45000, 66000, 1024);
+    setFader_fadeinout(FAD_RGB_R_set, 0, 24000, 4095, 45000, 66000, 1024);
+    setFader_fadeinout(FAD_RGB_G_set, 24000, 42000, 1024, 45000, 66000, 1024);
+    setFader_fadeinout(FAD_RGB_B_set, 6000, 34500, 1024, 45000, 66000, 1024);
 }
