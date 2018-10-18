@@ -1,8 +1,12 @@
 #include "Licht.h"
 
 // Constructors/Destructors
-//  
-
+//
+/*!
+ * Erzeugt das Licht Module
+ * @param pwm PWM ausgabe Module
+ * @param config Configurations Speicher module
+ */
 Licht::Licht (PCA9685 *pwm, Config * config) {
     this->pwm = pwm;
     this->config = config;
@@ -10,6 +14,8 @@ Licht::Licht (PCA9685 *pwm, Config * config) {
 
 /**
   * setup beim starten
+  * initaliert alle variabeln
+  * und holt zum ersten mal die werte aus der Configuration
   */
 void Licht::setup () {
     lasttime = 0;
@@ -17,20 +23,71 @@ void Licht::setup () {
     sunrise = false;
     sunset = false;
     speed = 0;
-
+    ww = 0;
+    kw = 0;
+    co2 = false;
     readFaderValues();
 }
 
-
+/*!
+ * Liest die Fader-Konfiguration aus dem Config-Speicher
+ */
 void Licht::readFaderValues() {
-    rF.set(    config->getFader(0,0), config->getFader(0,1), config->getFader(0,2),config->getFader(0,3),config->getFader(0,4),config->getFader(0,5));
-    bF.set(    config->getFader(1,0), config->getFader(1,1), config->getFader(1,2),config->getFader(1,3),config->getFader(1,4),config->getFader(1,5));
-    wwF.set(   config->getFader(2,0), config->getFader(2,1), config->getFader(2,2),config->getFader(2,3),config->getFader(2,4),config->getFader(2,5));
-    kwF.set(   config->getFader(3,0), config->getFader(3,1), config->getFader(3,2),config->getFader(3,3),config->getFader(3,4),config->getFader(3,5));
-    rgb_rF.set(config->getFader(4,0), config->getFader(4,1), config->getFader(4,2),config->getFader(4,3),config->getFader(4,4),config->getFader(4,5));
-    rgb_gF.set(config->getFader(5,0), config->getFader(5,1), config->getFader(5,2),config->getFader(5,3),config->getFader(5,4),config->getFader(5,5));
-    rgb_bF.set(config->getFader(6, 0), config->getFader(6, 1), config->getFader(6, 2), config->getFader(6, 3),
-               config->getFader(6, 4), config->getFader(6, 5));
+
+    rF_rise.set(config->getFader(FAD_R_rise, 0), config->getFader(FAD_R_rise, 1), config->getFader(FAD_R_rise, 2),
+                config->getFader(FAD_R_rise, 3), config->getFader(FAD_R_rise, 4), config->getFader(FAD_R_rise, 5));
+
+    bF_rise.set(config->getFader(FAD_B_rise, 0), config->getFader(FAD_B_rise, 1), config->getFader(FAD_B_rise, 2),
+                config->getFader(FAD_B_rise, 3), config->getFader(FAD_B_rise, 4), config->getFader(FAD_B_rise, 5));
+
+    rF_set.set(config->getFader(FAD_R_set, 0), config->getFader(FAD_R_set, 1), config->getFader(FAD_R_set, 2),
+               config->getFader(FAD_R_set, 3), config->getFader(FAD_R_set, 4), config->getFader(FAD_R_set, 5));
+
+    bF_set.set(config->getFader(FAD_B_set, 0), config->getFader(FAD_B_set, 1), config->getFader(FAD_B_set, 2),
+               config->getFader(FAD_B_set, 3), config->getFader(FAD_B_set, 4), config->getFader(FAD_B_set, 5));
+
+    wwF_rise.set(config->getFader(FAD_WW_rise, 0), config->getFader(FAD_WW_rise, 1), config->getFader(FAD_WW_rise, 2),
+                 config->getFader(FAD_WW_rise, 3), config->getFader(FAD_WW_rise, 4), config->getFader(FAD_WW_rise, 5));
+
+    kwF_rise.set(config->getFader(FAD_KW_rise, 0), config->getFader(FAD_KW_rise, 1), config->getFader(FAD_KW_rise, 2),
+                 config->getFader(FAD_KW_rise, 3), config->getFader(FAD_KW_rise, 4), config->getFader(FAD_KW_rise, 5));
+
+    wwF_set.set(config->getFader(FAD_WW_set, 0), config->getFader(FAD_WW_set, 1), config->getFader(FAD_WW_set, 2),
+                config->getFader(FAD_WW_set, 3), config->getFader(FAD_WW_set, 4), config->getFader(FAD_WW_set, 5));
+
+    kwF_set.set(config->getFader(FAD_KW_set, 0), config->getFader(FAD_KW_set, 1), config->getFader(FAD_KW_set, 2),
+                config->getFader(FAD_KW_set, 3), config->getFader(FAD_KW_set, 4), config->getFader(FAD_KW_set, 5));
+
+    rgb_rF_rise.set(config->getFader(FAD_RGB_R_rise, 0), config->getFader(FAD_RGB_R_rise, 1),
+                    config->getFader(FAD_RGB_R_rise, 2),
+                    config->getFader(FAD_RGB_R_rise, 3), config->getFader(FAD_RGB_R_rise, 4),
+                    config->getFader(FAD_RGB_R_rise, 5));
+
+    rgb_gF_rise.set(config->getFader(FAD_RGB_G_rise, 0), config->getFader(FAD_RGB_G_rise, 1),
+                    config->getFader(FAD_RGB_G_rise, 2),
+                    config->getFader(FAD_RGB_G_rise, 3), config->getFader(FAD_RGB_G_rise, 4),
+                    config->getFader(FAD_RGB_G_rise, 5));
+
+    rgb_bF_rise.set(config->getFader(FAD_RGB_B_rise, 0), config->getFader(FAD_RGB_B_rise, 1),
+                    config->getFader(FAD_RGB_B_rise, 2),
+                    config->getFader(FAD_RGB_B_rise, 3), config->getFader(FAD_RGB_B_rise, 4),
+                    config->getFader(FAD_RGB_B_rise, 5));
+
+    rgb_rF_set.set(config->getFader(FAD_RGB_R_set, 0), config->getFader(FAD_RGB_R_set, 1),
+                   config->getFader(FAD_RGB_R_set, 2),
+                   config->getFader(FAD_RGB_R_set, 3), config->getFader(FAD_RGB_R_set, 4),
+                   config->getFader(FAD_RGB_R_set, 5));
+
+    rgb_gF_set.set(config->getFader(FAD_RGB_G_set, 0), config->getFader(FAD_RGB_G_set, 1),
+                   config->getFader(FAD_RGB_G_set, 2),
+                   config->getFader(FAD_RGB_G_set, 3), config->getFader(FAD_RGB_G_set, 4),
+                   config->getFader(FAD_RGB_G_set, 5));
+
+    rgb_bF_set.set(config->getFader(FAD_RGB_B_set, 0), config->getFader(FAD_RGB_B_set, 1),
+                   config->getFader(FAD_RGB_B_set, 2),
+                   config->getFader(FAD_RGB_B_set, 3), config->getFader(FAD_RGB_B_set, 4),
+                   config->getFader(FAD_RGB_B_set, 5));
+
 }
 
 
@@ -45,11 +102,11 @@ void Licht::update (unsigned long milis) {
         starttime = milis;
     }
 
-    //nur einmal pro millikesunde ausführen
-    if (milis > lasttime) {
+    //nur einmal pro 10 millikesunde ausführen
+    if (milis > lasttime + 10) {
         lasttime = milis;
 
-        unsigned long deltaTime = lasttime - starttime;
+        unsigned long deltaTime = (lasttime - starttime) / 10;
 
         int time = 0;
 
@@ -66,10 +123,19 @@ void Licht::update (unsigned long milis) {
             }
         }
 
+
         if (sunrise || sunset) {
             runFaders(time);
 
+            //CO2 Bedingung
+            if (kw + ww > 8000) {
+                setCO2(true);
+            } else {
+                setCO2(false);
+            }
         }
+
+
     }
 }
 
@@ -112,10 +178,20 @@ void Licht::setRGB (uint16_t red, uint16_t green, uint16_t blue) {
 
 /**
  * setzt die Warm Wei� sofort auf einen bestimmten wert
+ * Checkt
  * @param  value
  */
 void Licht::setWW (uint16_t value) {
+    ww = value;
+
     pwm->pwmWrite(PWM_PIN_WW,value);
+
+    //CO2 Bedingung
+    if (kw + ww > 8000) {
+        setCO2(true);
+    } else {
+        setCO2(false);
+    }
 }
 
 
@@ -124,7 +200,16 @@ void Licht::setWW (uint16_t value) {
  * @param  value
  */
 void Licht::setKW (uint16_t value) {
+    kw = value;
     pwm->pwmWrite(PWM_PIN_KW,value);
+
+    //CO2 Bedingung
+    if (kw + ww > 8000) {
+        setCO2(true);
+    } else {
+        setCO2(false);
+    }
+
 }
 
 
@@ -146,20 +231,73 @@ void Licht::setB (uint16_t value) {
 }
 
 /*!
+ * Schaltet den CO2 ausgang an oder aus
+ * @param on   co2 (true-an / false-aus);
+ */
+void Licht::setCO2(bool on) {
+    if (on) {
+        pwm->pwmWrite(PWM_PIN_CO2, 4095);
+        co2 = true;
+    } else {
+        pwm->pwmWrite(PWM_PIN_CO2, 0);
+        co2 = false;
+    }
+}
+
+/*!
+ * Gibt den C02 Status zurück
+ * @return  co2 Status (true / false);
+ */
+bool Licht::getC02() {
+    return co2;
+}
+
+/*!
  * Setze alle PWM Werte für alle fader zur einer bestimmten zeit;
  * @param time Zeit in der Fade Kurve
  */
 void Licht::runFaders(int time) {
-    setR(static_cast<uint16_t >(rF.fade(time)));
-    setB(static_cast<uint16_t >(bF.fade(time)));
-    setWW(static_cast<uint16_t >(wwF.fade(time)));
-    setKW(static_cast<uint16_t >(kwF.fade(time)));
 
-    auto red = static_cast<uint16_t >(rgb_rF.fade(time));
-    auto green = static_cast<uint16_t >(rgb_gF.fade(time));
-    auto blue = static_cast<uint16_t >(rgb_bF.fade(time));
+    if (sunrise) {
+        setR(static_cast<uint16_t >(rF_rise.fade(time)));
+        setB(static_cast<uint16_t >(bF_rise.fade(time)));
 
-    setRGB(red, green, blue);
+        ww = wwF_rise.fade(time);
+        setWW(static_cast<uint16_t >(ww));
+
+        kw = kwF_rise.fade(time);
+        setKW(static_cast<uint16_t >(kw));
+
+        auto red = static_cast<uint16_t >(rgb_rF_rise.fade(time));
+        auto green = static_cast<uint16_t >(rgb_gF_rise.fade(time));
+        auto blue = static_cast<uint16_t >(rgb_bF_rise.fade(time));
+
+        setRGB(red, green, blue);
+
+    }
+
+    if (sunset) {
+        setR(static_cast<uint16_t >(rF_set.fade(time)));
+        setB(static_cast<uint16_t >(bF_set.fade(time)));
+
+        ww = wwF_set.fade(time);
+        setWW(static_cast<uint16_t >(ww));
+
+        kw = kwF_set.fade(time);
+        setKW(static_cast<uint16_t >(kw));
+
+        auto red = static_cast<uint16_t >(rgb_rF_set.fade(time));
+        auto green = static_cast<uint16_t >(rgb_gF_set.fade(time));
+        auto blue = static_cast<uint16_t >(rgb_bF_set.fade(time));
+
+        setRGB(red, green, blue);
+    }
+
+
 }
+
+
+
+
 
 

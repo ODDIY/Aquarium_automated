@@ -59,5 +59,4 @@ int ConfigDummy::setFader_fadeinout(int faderIndex, int start, int end, int val,
     setFader(faderIndex, 4, offEnd);
     setFader(faderIndex, 5, offval);
     return 0;
-
 }

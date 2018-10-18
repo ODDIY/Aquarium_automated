@@ -11,8 +11,6 @@
 
 
 
-
-
 class Fader
 {
     /*!
@@ -24,7 +22,7 @@ class Fader
  * \param offEnd ende des fade-off
  * \param offVal wert am ende des fade-off
  * \param time Aktuelle fade time
- * \return
+ * \return wert der aktuallen zeit zugeoordnet
  */
     static int fadefn(float start, float end, float val, float offStart, float offEnd, float offVal, int time) {
 
@@ -104,7 +102,6 @@ public:
 
     int fade(int time) {
         return fadefn(start,end,val,offStart,offEnd,offVal,time);
-
     }
 
     float start;

@@ -56,6 +56,21 @@ public:
 #define FADER_SIZE 6
 #define FADER_VAL_SIZE 4
 
+#define FAD_R_rise 0
+#define FAD_B_rise 1
+#define FAD_WW_rise 2
+#define FAD_KW_rise 3
+#define FAD_RGB_R_rise 4
+#define FAD_RGB_G_rise 5
+#define FAD_RGB_B_rise 6
+
+#define FAD_R_set 7
+#define FAD_B_set 8
+#define FAD_WW_set 9
+#define FAD_KW_set 10
+#define FAD_RGB_R_set 11
+#define FAD_RGB_G_set 12
+#define FAD_RGB_B_set 13
 
 class ConfigDummy {
 public:

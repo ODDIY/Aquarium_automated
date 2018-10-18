@@ -4,7 +4,7 @@ project(Aquarium_automated)
 set(CMAKE_CXX_STANDARD 11)
 add_executable(Test test/pwmdummy.h test/test.cpp src/Licht.h src/Licht.cpp test/config_dummy.h test/config_dummy.cpp)
 
-#include(CMakeListsPrivate.txt)
+include(CMakeListsPrivate.txt)
 
 add_custom_target(
     PLATFORMIO_BUILD ALL
