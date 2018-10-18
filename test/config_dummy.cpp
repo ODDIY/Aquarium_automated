@@ -36,3 +36,28 @@ int ConfigDummy::getFader(int faderIndex, int valueIndex) {
 void ConfigDummy::setFader(int faderIndex, int valueIndex, int value) {
     writeInt(FADER_START+ (faderIndex*FADER_SIZE*FADER_VAL_SIZE) + (valueIndex*FADER_VAL_SIZE), value);
 }
+
+void ConfigDummy::setup() {
+    EEPROM.dummyInit();
+}
+
+int ConfigDummy::setFader_fadein(int faderIndex, int start, int end, int val) {
+    setFader(faderIndex, 0, start);
+    setFader(faderIndex, 1, end);
+    setFader(faderIndex, 2, val);
+    setFader(faderIndex, 3, -1);
+    setFader(faderIndex, 4, -1);
+    setFader(faderIndex, 5, val);
+    return 0;
+}
+
+int ConfigDummy::setFader_fadeinout(int faderIndex, int start, int end, int val, int offstart, int offEnd, int offval) {
+    setFader(faderIndex, 0, start);
+    setFader(faderIndex, 1, end);
+    setFader(faderIndex, 2, val);
+    setFader(faderIndex, 3, offstart);
+    setFader(faderIndex, 4, offEnd);
+    setFader(faderIndex, 5, offval);
+    return 0;
+
+}

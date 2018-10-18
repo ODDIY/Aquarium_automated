@@ -16,6 +16,7 @@ typedef ConfigDummy Config;
   * 
   */
 
+#define FADE_TIME_MAX 60000
 #define PWM_PIN_WW 0
 #define PWM_PIN_KW 1
 #define PWM_PIN_R 2
@@ -24,7 +25,13 @@ typedef ConfigDummy Config;
 #define PWM_PIN_RGB_G 5
 #define PWM_PIN_RGB_B 6
 
-
+#define FAD_R 0
+#define FAD_B 1
+#define FAD_WW 2
+#define FAD_KW 3
+#define FAD_RGB_R 4
+#define FAD_RGB_G 5
+#define FAD_RGB_B 6
 
 class Licht
 {
@@ -41,11 +48,12 @@ private:
     Fader rgb_gF;
     Fader rgb_bF;
 
-    unsigned long lasttime;
-    unsigned long starttime;
+    unsigned long lasttime; //last update time
+    unsigned long starttime; //sunrise sunset time
+    bool start; //wird gesetzt um den sunset/sunrise zu staten
     bool sunrise;
     bool sunset;
-    int speed;
+    int speed; // Geschwindichkeit des an / auschalten
 
 public:
   // Empty Constructor
@@ -55,9 +63,6 @@ public:
 
   // setup beim starten
   void setup ();
-
-  //liest die aktuellen fader werte aus dem speicher
-  void readFaderValues();
 
   // Fadet das licht nach bedarf an und aus Und steuert die C02 zufur
   void update (unsigned long milis);
@@ -69,6 +74,11 @@ public:
   // Schaltet das licht mit einer bestimmten geschwindichket aus
   void aus (int speed);
 
+    //liest die aktuellen fader werte aus dem speicher
+    void readFaderValues();
+
+    //Führt alle fader für eine bestimmte Zeit aus
+    void runFaders(int time);
 
   // Schaltet sofort die RGB lampen auf einen bestimten wert
   void setRGB (uint16_t red, uint16_t green, uint16_t blue);

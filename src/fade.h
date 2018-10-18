@@ -10,7 +10,12 @@
  */
 
 
-/*!
+
+
+
+class Fader
+{
+    /*!
  * \brief faderfn Werte berechen
  * \param start Start des fade-in
  * \param end Ende des fade-in
@@ -21,50 +26,53 @@
  * \param time Aktuelle fade time
  * \return
  */
-int fadefn(float start, float end, float val, float offStart,float offEnd, float offVal, int time ) {
+    static int fadefn(float start, float end, float val, float offStart, float offEnd, float offVal, int time) {
 
 
-    //OFF
-    if(time < start) {
+        //OFF
+        if (time < start) {
+            return 0;
+        }
+
+        //FADE IN
+        if (time >= start && time <= end) {
+            //(start, 0)
+            //(end, val)
+
+            float a = val / (end - start);
+            float b = (start * val) / (end - start);
+
+            return a * time - b;
+        }
+
+        //ON
+        if (time > end && time < offStart) {
+            return val;
+        }
+
+        if (offStart != -1 && offEnd != -1 && offVal != val) {
+
+            //FADE OFF
+            if (time >= offStart && time <= offEnd) {
+                float a = (offVal - val) / (offEnd - offStart);
+                // int b = ((offEnd*val) - (offStart*offVal)) / (offEnd-offStart);
+                float b = val - (((offVal - val) / (offEnd - offStart)) * offStart);
+                return a * time + b;
+            }
+
+            //OFF
+            if (time > offEnd) {
+                return offVal;
+            }
+        } else {
+            if (time > end) {
+                return val;
+            }
+        }
+
         return 0;
     }
 
-    //FADE IN
-    if(time >= start && time <= end) {
-        //(start, 0)
-        //(end, val)
-
-        float a = val/(end-start);
-        float b = (start*val)/ (end-start);
-
-        return a*time - b;
-    }
-
-    //ON
-    if(time > end && time < offStart) {
-        return val;
-    }
-
-    //FADE OFF
-    if(time >= offStart && time <= offEnd) {
-        float  a = (offVal-val) / (offEnd- offStart);
-       // int b = ((offEnd*val) - (offStart*offVal)) / (offEnd-offStart);
-        float b = val - (((offVal-val)/(offEnd-offStart))*offStart );
-        return a*time + b;
-    }
-
-    //OFF
-    if(time > offEnd ){
-        return offVal;
-    }
-
-    return 0;
-}
-
-
-
-class Fader
-{
 public:
 
     Fader() {

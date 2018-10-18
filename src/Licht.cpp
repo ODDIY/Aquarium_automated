@@ -19,7 +19,6 @@ void Licht::setup () {
     speed = 0;
 
     readFaderValues();
-
 }
 
 
@@ -30,7 +29,8 @@ void Licht::readFaderValues() {
     kwF.set(   config->getFader(3,0), config->getFader(3,1), config->getFader(3,2),config->getFader(3,3),config->getFader(3,4),config->getFader(3,5));
     rgb_rF.set(config->getFader(4,0), config->getFader(4,1), config->getFader(4,2),config->getFader(4,3),config->getFader(4,4),config->getFader(4,5));
     rgb_gF.set(config->getFader(5,0), config->getFader(5,1), config->getFader(5,2),config->getFader(5,3),config->getFader(5,4),config->getFader(5,5));
-    rgb_bF.set(config->getFader(9,0), config->getFader(6,1), config->getFader(6,2),config->getFader(6,3),config->getFader(6,4),config->getFader(6,5));
+    rgb_bF.set(config->getFader(6, 0), config->getFader(6, 1), config->getFader(6, 2), config->getFader(6, 3),
+               config->getFader(6, 4), config->getFader(6, 5));
 }
 
 
@@ -40,7 +40,37 @@ Und steuert die C02 zufur
  @param milis Arduino Zeit in milliseconds  !!
  */
 void Licht::update (unsigned long milis) {
+    if (start) {
+        start = false;
+        starttime = milis;
+    }
 
+    //nur einmal pro millikesunde ausführen
+    if (milis > lasttime) {
+        lasttime = milis;
+
+        unsigned long deltaTime = lasttime - starttime;
+
+        int time = 0;
+
+        if (sunrise) {
+            time = static_cast<int> (deltaTime * speed);
+            if (time > FADE_TIME_MAX) {
+                sunrise = false;
+            }
+
+        } else if (sunset) {
+            time = static_cast<int>(FADE_TIME_MAX - (deltaTime * speed));
+            if (time < 0) {
+                sunset = false;
+            }
+        }
+
+        if (sunrise || sunset) {
+            runFaders(time);
+
+        }
+    }
 }
 
 /**
@@ -49,7 +79,8 @@ void Licht::update (unsigned long milis) {
  */
 void Licht::an (int speed) {
     this->speed = speed;
-    this->sunrise = true;
+    sunrise = true;
+    start = true;
     readFaderValues();
 }
 
@@ -60,7 +91,8 @@ void Licht::an (int speed) {
  */
 void Licht::aus (int speed) {
     this->speed = speed;
-    this->sunset = true;
+    sunset = true;
+    start = true;
     readFaderValues();
 }
 
@@ -74,7 +106,7 @@ void Licht::aus (int speed) {
 void Licht::setRGB (uint16_t red, uint16_t green, uint16_t blue) {
     pwm->pwmWrite(PWM_PIN_RGB_R,red);
     pwm->pwmWrite(PWM_PIN_RGB_G,green);
-    pwm->pwmWrite(PWM_PIN_RGB_G,blue);
+    pwm->pwmWrite(PWM_PIN_RGB_B, blue);
 }
 
 
@@ -111,6 +143,23 @@ void Licht::setR (uint16_t value){
  */
 void Licht::setB (uint16_t value) {
     pwm->pwmWrite(PWM_PIN_B,value);
+}
+
+/*!
+ * Setze alle PWM Werte für alle fader zur einer bestimmten zeit;
+ * @param time Zeit in der Fade Kurve
+ */
+void Licht::runFaders(int time) {
+    setR(static_cast<uint16_t >(rF.fade(time)));
+    setB(static_cast<uint16_t >(bF.fade(time)));
+    setWW(static_cast<uint16_t >(wwF.fade(time)));
+    setKW(static_cast<uint16_t >(kwF.fade(time)));
+
+    auto red = static_cast<uint16_t >(rgb_rF.fade(time));
+    auto green = static_cast<uint16_t >(rgb_gF.fade(time));
+    auto blue = static_cast<uint16_t >(rgb_bF.fade(time));
+
+    setRGB(red, green, blue);
 }
 
 
