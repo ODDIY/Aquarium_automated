@@ -1,5 +1,10 @@
 #include "gui.h"
 
+
+
+#include "settings.h"
+
+
 // Use hardware SPI ( D5= clk | D6= MISO | D7= MOSI
 Gui::Gui() : tft(TFT_CS, TFT_DC), ts(CS_PIN) {
 
@@ -197,14 +202,35 @@ void Gui::drawHome(){
                 tft.setCursor(10, 200);
                 tft.setTextSize(3);
                 tft.setTextColor(ILI9341_YELLOW);
-                tft.println(millis()/1000);
+                tft.println(millis()/1000L);
         }
 
-        homeChangedTime= false;
-        homeChangedLight = false;
-        homeChangedPump=false;
-        homeChangedAll=false;
+
+
+        if(homeChangedAll){
+          //  tft.fillRect(200,250,40,70,ILI9341_NAVY);drawHome
+          //  tft.setCursor(200,250);
+          //  tft.setTextSize(1);
+          //  tft.setTextColor(ILI9341_WHITE);drawHome
+          //  tft.println("settings");
+          //  tft.
+
+          tft.drawRGBBitmap(320-gimp_image.width,240-gimp_image.height, (uint16_t*) gimp_image.pixel_data,gimp_image.width,gimp_image.height);
+
 }
+
+
+
+
+
+
+          // setzt alle startbedingungen zurück
+          homeChangedTime= false;
+          homeChangedLight = false;
+          homeChangedPump=false;
+          homeChangedAll=false;
+        }
+
 
 
 
@@ -268,6 +294,8 @@ void Gui::analyzeTouchHome(Point p){
                 }
                 else {lightState= true;
                       homeChangedLight=true;}
+
+
         }
 
 }
