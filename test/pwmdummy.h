@@ -8,7 +8,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#define TEST 0002
+#define TEST 500
 
 #define PWM_PIN_WW 0
 #define PWM_PIN_KW 1
