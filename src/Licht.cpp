@@ -29,6 +29,7 @@ void Licht::setup () {
     readFaderValues();
 }
 
+
 /*!
  * Liest die Fader-Konfiguration aus dem Config-Speicher
  */
@@ -295,9 +296,3 @@ void Licht::runFaders(int time) {
 
 
 }
-
-
-
-
-
-

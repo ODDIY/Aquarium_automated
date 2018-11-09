@@ -22,7 +22,8 @@ enum GuiMode {  home,
                 eeprom_RGB_RED,
                 eeprom_RGB_GREEN,
                 eeprom_RGB_BLUE,
-              };
+                eeprom_TIME,
+                  };
 
 struct Point {
         int x;
@@ -54,6 +55,7 @@ bool settings2ChangedAll;
 bool settings2ChangedRED;
 bool settings2ChangedGREEN;
 bool settings2ChangedBLUE;
+bool settings2ChangedWHITE;
 bool eeprom_WW_ChangedAll;
 bool eeprom_KW_ChangedAll;
 bool eeprom_RED_ChangedAll;
@@ -61,6 +63,7 @@ bool eeprom_BLUE_ChangedAll;
 bool eeprom_RGB_RED_ChangedAll;
 bool eeprom_RGB_GREEN_ChangedAll;
 bool eeprom_RGB_BLUE_ChangedAll;
+bool eeprom_TIME_ChangedAll;
 int WW_Brightness;
 int KW_Brightness;
 int RED_Brightness;
@@ -68,6 +71,7 @@ int BLUE_Brightness;
 int RGB_RED_Brightness;
 int RGB_GREEN_Brightness;
 int RGB_BLUE_Brightness;
+int RGB_WHITE_Brightness;
 
 void drawHome();
 void drawSettings();
@@ -82,6 +86,7 @@ void drawSetting_eeprom_BLUE();
 void drawSetting_eeprom_RGB_RED();
 void drawSetting_eeprom_RGB_GREEN();
 void drawSetting_eeprom_RGB_BLUE();
+void drawSetting_eeprom_TIME();
 
 // analyze funktionen führen auch die eigegebenen "Knöpfe" aus
 void analyzeTouchHome(Point p);
@@ -95,6 +100,7 @@ void analyzeToucheeprom_RGB_RED (Point p);
 void analyzeToucheeprom_RGB_GREEN (Point p);
 void analyzeToucheeprom_RGB_BLUE (Point p);
 void eeprom_GUI_draw();
+void analyzeToucheeprom_TIME(Point p);
 
 unsigned long testFillScreen();
 unsigned long testText();

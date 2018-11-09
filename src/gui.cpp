@@ -98,6 +98,8 @@ void Gui::update() {
                         analyzeToucheeprom_RGB_GREEN(lastPos);
                 } else if (mode == eeprom_RGB_BLUE){
                         analyzeToucheeprom_RGB_BLUE(lastPos);
+                } else if (mode == eeprom_TIME){
+                        analyzeToucheeprom_TIME(lastPos);
                 }
 
 
@@ -113,7 +115,7 @@ void Gui::update() {
 
         if (mode == home && (homeChangedPump==true || homeChangedAll == true|| homeChangedLight==true || homeChangedTime==true) ) drawHome();
         if (mode == settings &&( settingsChangedAll == true ||settingsChangedWW==true ||settingsChangedKW==true || settingsChangedRED==true || settingsChangedBLUE==true )) drawSettings();
-        if (mode == settings2 && (settings2ChangedAll== true||settings2ChangedRED== true ||settings2ChangedGREEN== true ||settings2ChangedBLUE== true)) drawSettings2();
+        if (mode == settings2 && (settings2ChangedAll== true||settings2ChangedRED== true ||settings2ChangedGREEN== true ||settings2ChangedBLUE== true||settings2ChangedWHITE==true)) drawSettings2();
         if (mode == eeprom_WW &&(eeprom_WW_ChangedAll==true) ) drawSetting_eeprom_WW();
         if (mode == eeprom_KW &&(eeprom_KW_ChangedAll==true) ) drawSetting_eeprom_KW();
         if (mode == eeprom_RED &&(eeprom_RED_ChangedAll==true) ) drawSetting_eeprom_RED();
@@ -121,6 +123,7 @@ void Gui::update() {
         if (mode == eeprom_RGB_RED && (eeprom_RGB_RED_ChangedAll==true)) drawSetting_eeprom_RGB_RED();
         if (mode == eeprom_RGB_GREEN && (eeprom_RGB_GREEN_ChangedAll==true)) drawSetting_eeprom_RGB_GREEN();
         if (mode == eeprom_RGB_BLUE && (eeprom_RGB_BLUE_ChangedAll==true)) drawSetting_eeprom_RGB_BLUE();
+        if (mode == eeprom_TIME && (eeprom_TIME_ChangedAll==true)) drawSetting_eeprom_TIME();
 
 
 }
@@ -326,7 +329,7 @@ void Gui::drawSettings(){
                     tft.fillRect(115,170,50,50,ILI9341_BLACK);
                     tft.setTextColor(ILI9341_BLUE);
                     tft.setCursor(117,190);
-                    tft.printf("%d %%", BLUE_Brightness);                }
+                    tft.printf("%d%%", BLUE_Brightness);                }
 
 
 
@@ -397,7 +400,11 @@ void Gui::drawSettings2(){
                     tft.setTextColor(ILI9341_BLUE);
                     tft.printf("%d%%", RGB_BLUE_Brightness);                }
 
-
+                    if(settings2ChangedWHITE || settings2ChangedAll) {  // Wert von Warmweiß aktuallisierenetc...
+                      tft.fillRect(115,115+55,50,50,ILI9341_BLACK);
+                      tft.setCursor(117,190);
+                      tft.setTextColor(ILI9341_WHITE);
+                      tft.printf("%d%%", RGB_BLUE_Brightness);                }
 
 
 
@@ -410,6 +417,7 @@ settings2ChangedAll= false;
 settings2ChangedRED= false;
 settings2ChangedBLUE= false;
 settings2ChangedGREEN = false;
+settings2ChangedWHITE= false;
 } // RGB Rückwand
 
 void Gui::drawSetting_eeprom_WW() {
@@ -539,6 +547,23 @@ void Gui::drawSetting_eeprom_RGB_BLUE() {
   eeprom_RGB_BLUE_ChangedAll = false;
 }
 
+
+void Gui::drawSetting_eeprom_TIME() {
+
+  if(eeprom_TIME_ChangedAll){
+
+    tft.fillScreen(ILI9341_LIGHTGREY);
+    tft.setTextColor(ILI9341_BLACK);
+    tft.setCursor(5,5);
+    tft. println("EEPROM-Settings-TIME");
+
+  tft.drawRGBBitmap(320-arrow_left.width,240-(arrow_image.height+home_image.height+arrow_left.height), (uint16_t*) arrow_left.pixel_data,arrow_left.width,arrow_left.height);
+  tft.drawRGBBitmap(320-arrow_image.width,240-(arrow_image.height+home_image.height), (uint16_t*) arrow_image.pixel_data,arrow_image.width,arrow_image.height);
+  tft.drawRGBBitmap(320-home_image.width,240-home_image.height, (uint16_t*) home_image.pixel_data,home_image.width,home_image.height);
+  }
+
+  eeprom_TIME_ChangedAll = false;
+}
 
 
 
@@ -684,6 +709,9 @@ guiRowFinder(&RGB_GREEN_Brightness, &settings2ChangedGREEN, x);
 if (y>115 && y< 165) {
 guiRowFinder(&RGB_BLUE_Brightness, &settings2ChangedBLUE, x);
 }
+if (y>170 && y< 210) {
+guiRowFinder(&RGB_WHITE_Brightness, &settings2ChangedWHITE, x);
+}
 
 
 
@@ -806,13 +834,27 @@ void Gui::analyzeToucheeprom_RGB_BLUE(Point p) {
     homeChangedAll= true; }
 
     if (x<=320 && x>= 280 && y<=200 && y>=160) {   // zu settings wechseln
+      mode=eeprom_TIME;
+      eeprom_TIME_ChangedAll= true;}
+       if (x<=320 && x>= 280 && y<=160 && y>=120) {   // zu settings nächste seite wechseln
+              mode=eeprom_RGB_GREEN;
+              eeprom_RGB_GREEN_ChangedAll= true;  }
+}
+
+void Gui::analyzeToucheeprom_TIME(Point p) {
+  int x = p.x;
+  int y = p.y;
+  if (x<=320 && x>= 280 && y<=240 && y>=200) {   // zu home wechseln
+    mode=home;
+    homeChangedAll= true; }
+
+    if (x<=320 && x>= 280 && y<=200 && y>=160) {   // zu settings wechseln
       mode=settings;
       settingsChangedAll= true;}
        if (x<=320 && x>= 280 && y<=160 && y>=120) {   // zu settings nächste seite wechseln
               mode=eeprom_RGB_GREEN;
               eeprom_RGB_GREEN_ChangedAll= true;  }
 }
-
 
 
 
