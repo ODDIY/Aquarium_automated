@@ -5,7 +5,8 @@
 #include <Adafruit_GFX.h>
 #include <XPT2046_Touchscreen.h>
 #include <Arduino.h>
-
+#include "Config.h"
+#include "Licht.h"
 
 #define TFT_DC 2 // Display
 #define TFT_CS 15 // Display
@@ -32,6 +33,8 @@ struct Point {
 class Gui
 {
 private:
+Licht * licht;
+Config * config;
 Adafruit_ILI9341 tft;
 XPT2046_Touchscreen ts;
 GuiMode mode;       // 0= home ; 1= settings
@@ -61,13 +64,13 @@ bool eeprom_BLUE_ChangedAll;
 bool eeprom_RGB_RED_ChangedAll;
 bool eeprom_RGB_GREEN_ChangedAll;
 bool eeprom_RGB_BLUE_ChangedAll;
-int WW_Brightness;
-int KW_Brightness;
-int RED_Brightness;
-int BLUE_Brightness;
-int RGB_RED_Brightness;
-int RGB_GREEN_Brightness;
-int RGB_BLUE_Brightness;
+uint16_t WW_Brightness;
+uint16_t KW_Brightness;
+uint16_t RED_Brightness;
+uint16_t BLUE_Brightness;
+uint16_t RGB_RED_Brightness;
+uint16_t RGB_GREEN_Brightness;
+uint16_t RGB_BLUE_Brightness;
 
 void drawHome();
 void drawSettings();
@@ -100,7 +103,7 @@ unsigned long testFillScreen();
 unsigned long testText();
 
 public:
-Gui();
+Gui(Config *conf, Licht* licht);
 void setup();
 void update();
 };

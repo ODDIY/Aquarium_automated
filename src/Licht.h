@@ -57,8 +57,13 @@ private:
     Fader rgb_gF_set;
     Fader rgb_bF_set;
 
-    int ww;
-    int kw;
+    uint16_t rgb_r;
+    uint16_t rgb_g;
+    uint16_t rgb_b;
+    uint16_t Rval;
+    uint16_t Bval;
+    uint16_t ww;
+    uint16_t kw;
     bool co2;
     unsigned long lasttime; //last update time
     unsigned long starttime; //sunrise sunset time
@@ -92,18 +97,22 @@ public:
 
     // Schaltet sofort die RGB lampen auf einen bestimten wert
     void setRGB (uint16_t red, uint16_t green, uint16_t blue);
+    void getRGB(uint16_t &red, uint16_t &green, uint16_t &blue) {red = rgb_r; green = rgb_g; blue=rgb_b;}
 
     // setzt die Warm Weiß sofort auf einen bestimmten wert
     void setWW (uint16_t value);
+    uint16_t getWW() {return ww;}
 
     // setzt die Kalt Weiß sofort auf einen bestimmten wert
     void setKW (uint16_t value);
+    uint16_t getKW() {return kw;}
 
     // setzt die Roten LEDs sofort auf einen bestimmten wert
     void setR (uint16_t value);
-
+    uint16_t getR() {return Rval;}
     // setzt die Blauen LEDs sofort auf einen bestimmten wert
     void setB (uint16_t value);
+    uint16_t getB() {return Bval;}
 
     void setCO2(bool on);
 

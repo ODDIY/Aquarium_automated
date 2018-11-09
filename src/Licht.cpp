@@ -170,6 +170,10 @@ void Licht::aus (int speed) {
  * @param  blue
  */
 void Licht::setRGB (uint16_t red, uint16_t green, uint16_t blue) {
+    red = min(red, 4095);
+    green = min(green, 4095);
+    blue = min(blue, 4095);
+
     pwm->pwmWrite(PWM_PIN_RGB_R,red);
     pwm->pwmWrite(PWM_PIN_RGB_G,green);
     pwm->pwmWrite(PWM_PIN_RGB_B, blue);
@@ -182,8 +186,8 @@ void Licht::setRGB (uint16_t red, uint16_t green, uint16_t blue) {
  * @param  value
  */
 void Licht::setWW (uint16_t value) {
+    value = min(value, 4095);
     ww = value;
-
     pwm->pwmWrite(PWM_PIN_WW,value);
 
     //CO2 Bedingung
@@ -200,6 +204,7 @@ void Licht::setWW (uint16_t value) {
  * @param  value
  */
 void Licht::setKW (uint16_t value) {
+    value = min(value, 4095);
     kw = value;
     pwm->pwmWrite(PWM_PIN_KW,value);
 
@@ -218,6 +223,8 @@ void Licht::setKW (uint16_t value) {
  * @param  value
  */
 void Licht::setR (uint16_t value){
+  value = min(value, 4095);
+
     pwm->pwmWrite(PWM_PIN_R,value);
 }
 
@@ -227,6 +234,8 @@ void Licht::setR (uint16_t value){
  * @param  value
  */
 void Licht::setB (uint16_t value) {
+  value = min(value, 4095);
+
     pwm->pwmWrite(PWM_PIN_B,value);
 }
 
@@ -295,9 +304,3 @@ void Licht::runFaders(int time) {
 
 
 }
-
-
-
-
-
-

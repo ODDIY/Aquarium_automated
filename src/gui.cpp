@@ -6,8 +6,9 @@
 
 
 // Use hardware SPI ( D5= clk | D6= MISO | D7= MOSI
-Gui::Gui() : tft(TFT_CS, TFT_DC), ts(CS_PIN) {
-
+Gui::Gui(Config *conf, Licht* licht) : tft(TFT_CS, TFT_DC), ts(CS_PIN) {
+  this->config = conf;
+  this->licht = licht;
 }
 
 
@@ -651,15 +652,20 @@ void Gui::analyzeTouchSettings(Point p) {
 
   if (y>5 && y< 55) {
   guiRowFinder(&WW_Brightness, &settingsChangedWW, x);
+  licht->setWW(WW_Brightness);
   }
   if (y>60 && y< 110) {
   guiRowFinder(&KW_Brightness, &settingsChangedKW, x);
+  licht->setKW(KW_Brightness);
   }
   if (y>115 && y< 165) {
   guiRowFinder(&RED_Brightness, &settingsChangedRED, x);
+  licht->setR(RED_Brightness);
   }
   if (y>170 && y< 210) {
   guiRowFinder(&BLUE_Brightness, &settingsChangedBLUE, x);
+  licht->setB(BLUE_Brightness);
+
   }
 
 
@@ -677,12 +683,15 @@ void Gui::analyzeTouchSettings2(Point p) {
 
 if (y>5 && y< 55) {
 guiRowFinder(&RGB_RED_Brightness, &settings2ChangedRED, x);
+licht->setRGB(RGB_RED_Brightness, RGB_GREEN_Brightness,RGB_BLUE_Brightness );
 }
 if (y>60 && y< 110) {
 guiRowFinder(&RGB_GREEN_Brightness, &settings2ChangedGREEN, x);
+licht->setRGB(RGB_RED_Brightness, RGB_GREEN_Brightness,RGB_BLUE_Brightness );
 }
 if (y>115 && y< 165) {
 guiRowFinder(&RGB_BLUE_Brightness, &settings2ChangedBLUE, x);
+licht->setRGB(RGB_RED_Brightness, RGB_GREEN_Brightness,RGB_BLUE_Brightness );
 }
 
 
