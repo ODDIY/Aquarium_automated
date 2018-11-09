@@ -27,8 +27,11 @@ typedef ConfigDummy Config;
 #define PWM_PIN_RGB_R 4
 #define PWM_PIN_RGB_G 5
 #define PWM_PIN_RGB_B 6
+#define PWM_PIN_RGB_W 7
 
-#define PWM_PIN_CO2 7
+#define PWM_PIN_CO2 14
+
+
 
 /**
   * class Licht
@@ -57,6 +60,7 @@ private:
     Fader rgb_gF_set;
     Fader rgb_bF_set;
 
+    uint16_t rgb_w;
     uint16_t rgb_r;
     uint16_t rgb_g;
     uint16_t rgb_b;
@@ -98,6 +102,9 @@ public:
     // Schaltet sofort die RGB lampen auf einen bestimten wert
     void setRGB (uint16_t red, uint16_t green, uint16_t blue);
     void getRGB(uint16_t &red, uint16_t &green, uint16_t &blue) {red = rgb_r; green = rgb_g; blue=rgb_b;}
+
+    void setRGB_W(uint16_t white);
+    uint16_t getRGB_W() {return rgb_w;}
 
     // setzt die Warm Weiß sofort auf einen bestimmten wert
     void setWW (uint16_t value);

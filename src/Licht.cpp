@@ -180,6 +180,13 @@ void Licht::setRGB (uint16_t red, uint16_t green, uint16_t blue) {
 }
 
 
+void Licht::setRGB_W(uint16_t white) {
+  white = min(white, 4095);
+  pwm->pwmWrite(PWM_PIN_RGB_W,white);
+
+}
+
+
 /**
  * setzt die Warm Wei� sofort auf einen bestimmten wert
  * Checkt
