@@ -350,6 +350,7 @@ void Gui::drawSettings2(){
     tft.setCursor(5,200);
     tft. println(" aktuelle Helligkeit \n RGB Hintergrund");
 
+
     for(int i =0; i<140; i= i+55)  {      // zeichnen von 5x4 Quadraten
         for (int j=0; j<270; j= j+55) {
             tft.fillRect(5+j,5+i,50,50,ILI9341_BLACK);
