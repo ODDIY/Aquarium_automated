@@ -1,5 +1,12 @@
 #include "Licht.h"
 
+uint16_t min( uint16_t v1, uint16_t v2) {
+if(v1 < v2) {
+  return v1;
+}
+  return v2;
+}
+
 // Constructors/Destructors
 //
 /*!

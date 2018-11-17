@@ -26,5 +26,5 @@ void setup() {
 void loop() {
         // put your main code here, to run repeatedly:
         gui.update();
-        licht.update();
+        licht.update(millis());
 }

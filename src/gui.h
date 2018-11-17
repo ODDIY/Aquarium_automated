@@ -8,9 +8,9 @@
 #include "Config.h"
 #include "Licht.h"
 
-#define TFT_DC 2 // Display
-#define TFT_CS 15 // Display
-#define CS_PIN  4 // Touch
+#define TFT_DC 4 // Display
+#define TFT_CS 5 // Display
+#define CS_PIN  15 // Touch
 
 
 enum GuiMode {  home,
@@ -66,17 +66,9 @@ bool eeprom_BLUE_ChangedAll;
 bool eeprom_RGB_RED_ChangedAll;
 bool eeprom_RGB_GREEN_ChangedAll;
 bool eeprom_RGB_BLUE_ChangedAll;
-<<<<<<< HEAD
+
 bool eeprom_TIME_ChangedAll;
-int WW_Brightness;
-int KW_Brightness;
-int RED_Brightness;
-int BLUE_Brightness;
-int RGB_RED_Brightness;
-int RGB_GREEN_Brightness;
-int RGB_BLUE_Brightness;
-int RGB_WHITE_Brightness;
-=======
+
 uint16_t WW_Brightness;
 uint16_t KW_Brightness;
 uint16_t RED_Brightness;
@@ -84,14 +76,14 @@ uint16_t BLUE_Brightness;
 uint16_t RGB_RED_Brightness;
 uint16_t RGB_GREEN_Brightness;
 uint16_t RGB_BLUE_Brightness;
->>>>>>> dev-direct-settings
+uint16_t RGB_WHITE_Brightness;
 
 void drawHome();
 void drawSettings();
 void drawSettings2();
 void drawSettings3();
 Point readTouch();       // liesst Touch aus
-void guiRowFinder(int* brightness, bool *changedbool, int x);
+void guiRowFinder(uint16_t* brightness, bool *changedbool, int x);
 void drawSetting_eeprom_WW();
 void drawSetting_eeprom_KW();
 void drawSetting_eeprom_RED();

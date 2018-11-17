@@ -18,7 +18,7 @@ PCA9685::PCA9685(uint8_t addr, float freq){
 }
 
 void PCA9685::begin(void) {
- Wire.begin();
+ Wire.begin(0,2);
  reset();
  setFreq(_freq);
 }

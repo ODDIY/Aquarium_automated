@@ -25,7 +25,7 @@
 #define Z_THRESHOLD     400
 #define Z_THRESHOLD_INT	75
 #define MSEC_THRESHOLD  3
-#define SPI_SETTING     SPISettings(2000000, MSBFIRST, SPI_MODE0)
+#define SPI_SETTING     SPISettings(200000, MSBFIRST, SPI_MODE0)
 
 static XPT2046_Touchscreen 	*isrPinptr;
 void isrPin(void);
@@ -107,7 +107,7 @@ void XPT2046_Touchscreen::update()
 	if (!isrWake) return;
 	uint32_t now = millis();
 	if (now - msraw < MSEC_THRESHOLD) return;
-	
+
 	SPI.beginTransaction(SPI_SETTING);
 	digitalWrite(csPin, LOW);
 	SPI.transfer(0xB1 /* Z1 */);
@@ -138,14 +138,14 @@ void XPT2046_Touchscreen::update()
 		return;
 	}
 	zraw = z;
-	
+
 	// Average pair with least distance between each measured x then y
 	//Serial.printf("    z1=%d,z2=%d  ", z1, z2);
 	//Serial.printf("p=%d,  %d,%d  %d,%d  %d,%d", zraw,
 		//data[0], data[1], data[2], data[3], data[4], data[5]);
 	int16_t x = besttwoavg( data[0], data[2], data[4] );
 	int16_t y = besttwoavg( data[1], data[3], data[5] );
-	
+
 	//Serial.printf("    %d,%d", x, y);
 	//Serial.println();
 	if (z >= Z_THRESHOLD) {
@@ -169,6 +169,3 @@ void XPT2046_Touchscreen::update()
 		}
 	}
 }
-
-
-

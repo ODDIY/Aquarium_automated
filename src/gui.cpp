@@ -24,7 +24,7 @@ void Gui::setup(){
 // testbild
         mode = home;
         pumpState=false;
-        tft.begin();
+        tft.begin(2000000);
 
         ts.begin();
         ts.setRotation(1);
@@ -42,10 +42,10 @@ void Gui::setup(){
         Serial.print("Self Diagnostic: 0x"); Serial.println(x, HEX);
 
         Serial.println(F("Benchmark                Time (microseconds)"));
-        delay(10);
+        delay(50);
         Serial.print(F("Screen fill              "));
         Serial.println(testFillScreen());
-        delay(10);
+        delay(50);
 
         Serial.print(F("Text                     "));
         Serial.println(testText());
@@ -74,6 +74,7 @@ void Gui::update() {
         if (ts.touched()) {
                 lastPos = readTouch();
                 presssed = true;
+                Serial.println("TOUCH");
         }
 //Wenn losgelassen
         if (!ts.touched() && presssed) {
@@ -721,6 +722,7 @@ licht->setRGB(RGB_RED_Brightness, RGB_GREEN_Brightness,RGB_BLUE_Brightness );
 }
 if (y>170 && y< 210) {
 guiRowFinder(&RGB_WHITE_Brightness, &settings2ChangedWHITE, x);
+licht->setRGB_W(RGB_WHITE_Brightness);
 }
 
 
@@ -880,7 +882,7 @@ void Gui::analyzeToucheeprom_TIME(Point p) {
 
 
 
-void Gui::guiRowFinder(int* brightness, bool* changedbool, int x) {
+void Gui::guiRowFinder(uint16_t* brightness, bool* changedbool, int x) {
 if (x>5&& x<55)           { *brightness+=10; *changedbool= true; }
 else if (x>60 && x<115)   { *brightness+=1;   *changedbool=true; }
 else if (x>180 && x<235)  { *brightness-=1 ;   *changedbool=true;}
