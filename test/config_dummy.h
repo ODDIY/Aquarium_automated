@@ -19,34 +19,40 @@ typedef uint8_t byte;
 class EepromDummy {
 
 public:
-    uint8_t data[512];
+uint8_t data[512];
 
-    uint8_t read(int address) {
+uint8_t read(int address) {
         return data[address];
-    }
+}
 
-    void write(int addr, byte val) {
+void commit(){
+};
+
+void begin(int) {
+};
+
+void write(int addr, byte val) {
         data[addr] = val;
 
         FILE* pFile;
         pFile = fopen("file.binary", "wb");
         fwrite(data, 1, 512, pFile);
         fclose(pFile);
-    }
+}
 
-    void dummyInit(){
+void dummyInit(){
         FILE* pFile;
         pFile = fopen("file.binary", "rb");
         fread(data, 1, 512, pFile);
         fclose(pFile);
-    }
+}
 
-    void dummyInitZero(){
+void dummyInitZero(){
         for (int i = 0; i < 512; ++i) {
-            data[0] = 0;
+                data[0] = 0;
         }
         write(0, 0);
-    }
+}
 
 };
 
@@ -74,20 +80,20 @@ public:
 
 class ConfigDummy {
 public:
-    void setup();
-    void dummyInit();
-    void writeInt(int adr, int val);
-    void writeByte(int adr, byte byt);
-    int readInt(int adr);
-    byte readByte(int adr);
+void setup();
+void dummyInit();
+void writeInt(int adr, int val);
+void writeByte(int adr, byte byt);
+int readInt(int adr);
+byte readByte(int adr);
 
-    int getFader(int faderIndex, int valueIndex);
+int getFader(int faderIndex, int valueIndex);
 
-    void setFader(int faderIndex, int valueIndex, int value);
+void setFader(int faderIndex, int valueIndex, int value);
 
-    int setFader_fadein(int faderIndex, int start, int end, int val);
+int setFader_fadein(int faderIndex, int start, int end, int val);
 
-    int setFader_fadeinout(int faderIndex, int start, int end, int val, int offstart, int offEnd, int offval);
+int setFader_fadeinout(int faderIndex, int start, int end, int val, int offstart, int offEnd, int offval);
 
 
 

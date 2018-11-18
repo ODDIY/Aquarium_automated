@@ -11,7 +11,7 @@
 //Definition Wie Der Fader Speicher aussieht
 #define FADER_START 0
 #define FADER_SIZE 6
-#define FADER_VAL_SIZE 4
+#define FADER_VAL_SIZE sizeof(int)
 
 //Index nummern der Fader im Speicher
 #define FAD_R_rise 0
@@ -30,6 +30,17 @@
 #define FAD_RGB_G_set 12
 #define FAD_RGB_B_set 13
 
+//Timer Werte im Speicher
+#define TIME_START FADER_START+(14*FADER_SIZE*FADER_VAL_SIZE)
+#define TIME_SIZE sizeof(int)
+
+//Index nummern der Timer im Speicher
+#define T_RISE1 0
+#define T_FALL1 1
+#define T_RISE2 2
+#define T_FALL2 3
+
+#define TIME_TO_SEC(h,m,s) ((((h*60)+m)*60)+s)
 
 /*!
  * class Config
@@ -66,6 +77,12 @@ public:
 
     //setze ALLE Werte eines Faders mit ausfaden
     void setFader_fadeinout(int faderIndex, int start, int end, int val, int offstart, int offEnd, int offval);
+
+    //
+    void setTimer(int timerIndex, int secondOfTheDay);
+
+    //
+    int getTimer(int timerIndex);
 
 };
 
